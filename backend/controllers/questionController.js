@@ -1,19 +1,11 @@
-import questionModel from "../models/question-model.js";
+import questionModel from "../models/questionModel.js";
+import QuestionService from "../services/questionservice.js";
 
 class QuestionController {
   async create(req, res) {
     try {
-      const { title, answers, correct_answer } = req.body;
-
-      const newQuestion = new questionModel({
-        title,
-        answers,
-        correct_answer,
-      });
-
-      const savedQuestion = await newQuestion.save();
-
-      res.json(savedQuestion);
+      const question = QuestionService.create(req.body);
+      res.json(question);
       res.status(200);
     } catch (error) {
       res.status(500).json(error);
@@ -22,7 +14,7 @@ class QuestionController {
 
   async getAll(req, res) {
     try {
-      const questions = await questionModel.find();
+      const questions = await QuestionService.getAll();
       return res.json(questions);
     } catch (error) {
       res.status(500).json(error);
@@ -31,10 +23,7 @@ class QuestionController {
   async getOne(req, res) {
     try {
       const { id } = req.params;
-      if (!id) {
-        res.status(400).json({ message: "Not found ID" });
-      }
-      const question = await questionModel.findById(id);
+      const question = await QuestionService.getOne(id);
       return res.json(question);
     } catch (error) {
       res.status(500).json({ error: "500" });
@@ -43,12 +32,8 @@ class QuestionController {
   async update(req, res) {
     try {
       const question = req.body;
-      if (!question._id) {
-        res.status(400).json({ message: "Not found ID" });
-      }
-      const updatedQuestion = await questionModel.findByIdAndUpdate(question._id, question, {
-        new: true,
-      });
+
+      const updatedQuestion = await QuestionService.update(question);
       return res.json(updatedQuestion);
     } catch (error) {
       res.status(500).json({ error: "500" });
@@ -57,10 +42,8 @@ class QuestionController {
   async delete(req, res) {
     try {
       const { id } = req.params;
-      if (!id) {
-        res.status(400).json({ message: "Not found ID" });
-      }
-      const question = await questionModel.findByIdAndDelete(id);
+
+      const question = await QuestionService.delete(id);
       return res.json(question);
     } catch (error) {
       res.status(500).json({ error: "500" });

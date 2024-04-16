@@ -3,7 +3,7 @@ import { config } from "dotenv";
 import mongoose from "mongoose";
 import express from "express";
 import cors from "cors";
-import questionRouter from "./routes/question-router.js";
+import questionRouter from "./routes/questionRouter.js";
 
 config();
 
