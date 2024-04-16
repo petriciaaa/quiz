@@ -1,0 +1,30 @@
+.search {
+  position: relative;
+
+  border: 0.1px solid #2c78d4;
+
+  & input {
+    padding-left: 1rem;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 400;
+  }
+
+  &__result {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    width: 21%;
+    padding: 1rem;
+    height: max-content;
+    max-height: 200px;
+
+    margin-top: 2rem;
+
+    overflow-y: scroll;
+    scrollbar-width: none;
+    position: absolute;
+
+    &__element {
+    }
+  }
+}

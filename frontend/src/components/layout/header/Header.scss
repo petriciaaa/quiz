@@ -1,0 +1,17 @@
+header {
+  & nav {
+    width: 40rem;
+  }
+}
+
+.header__nav__element {
+  font-family: "Montserrat", sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  &:active {
+    color: cadetblue;
+  }
+  &:hover {
+    text-decoration: underline 1px solid black;
+  }
+}
