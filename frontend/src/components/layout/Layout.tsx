@@ -8,7 +8,7 @@ function Layout() {
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Header />
-      <main className="mt-10" style={{ flex: 1 }}>
+      <main className="mt-20" style={{ flex: 1 }}>
         <Outlet />
       </main>
 

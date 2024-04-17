@@ -7,6 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "assets/scss/main.scss";
 import "assets/scss/fonts.scss";
 import "assets/scss/reset.scss";
+import { store } from "./store/index";
 
 const rootDom = document.getElementById("root") as HTMLElement;
 
@@ -18,9 +19,9 @@ if (!rootDom) {
     //
     <React.StrictMode>
       <BrowserRouter>
-        {/* <Provider store={}> */}
-        <App />
-        {/* </Provider> */}
+        <Provider store={store}>
+          <App />
+        </Provider>
       </BrowserRouter>
     </React.StrictMode>
     //

@@ -1,18 +1,35 @@
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import { useWindowSize } from "usehooks-ts";
 import MenuIcon from "@mui/icons-material/Menu";
 import LiveSearch from "components/search/LiveSearch";
 import Logo from "assets/images/logo.png";
+
 import "./header.scss";
+import { useAppSelector } from "hooks/redux/main";
+import { getRandomInt } from "utils/getRandomInt";
+import { useAppDispatch } from "./../../../hooks/redux/main";
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { width = 0, height = 0 } = useWindowSize();
+  const [questionId, setQuestionId] = useState();
+  const location = useLocation();
+  const quizes = useAppSelector((state) => state.quiz);
 
+  const dispatch = useAppDispatch();
+
+  const currId = quizes[getRandomInt(quizes.length)]
+    ? quizes[getRandomInt(quizes.length)]._id
+    : undefined;
+
+  useEffect(() => {
+    setQuestionId(currId);
+    console.log(quizes);
+  }, [dispatch, currId, location]);
   return (
     <>
-      <header className={`w-full `}>
+      <header className={`w-full fixed bg-white`}>
         <div
           className={`header-wrapper  ${
             width <= 550 ? "hidden" : "block"
@@ -31,10 +48,13 @@ function Header() {
             <NavLink to={"#"} className={`header__nav__element`}>
               Quiz
             </NavLink>
-            <NavLink to={"#"} className={`header__nav__element`}>
+            <NavLink to={"/addQuestion"} className={`header__nav__element`}>
               Add quiz
             </NavLink>
-            <NavLink to={"#"} className={`header__nav__element`}>
+            <NavLink
+              to={`${questionId ? `/random/${questionId}` : "/notFound"}`}
+              className={`header__nav__element`}
+            >
               Random quiz
             </NavLink>
           </nav>

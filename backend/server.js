@@ -11,9 +11,10 @@ const DB_URL = `mongodb+srv://${process.env.USERNAME__MONGO__DB}:${process.env.P
 const app = express();
 
 const PORT = 3000;
-app.use(cors());
+
 app.use(express.json());
 app.use("/api", questionRouter);
+app.use(cors());
 
 async function startServer() {
   try {
