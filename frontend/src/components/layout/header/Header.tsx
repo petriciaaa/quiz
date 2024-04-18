@@ -9,24 +9,23 @@ import "./header.scss";
 import { useAppSelector } from "hooks/redux/main";
 import { getRandomInt } from "utils/getRandomInt";
 import { useAppDispatch } from "./../../../hooks/redux/main";
+import { setRandomQuestion } from "store/slices/quizSlice";
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { width = 0, height = 0 } = useWindowSize();
-  const [questionId, setQuestionId] = useState();
+  const [questionId, setQuestionId] = useState<Number>();
   const location = useLocation();
-  const quizes = useAppSelector((state) => state.quiz);
 
+  const quizes = useAppSelector((state) => state.quiz.quizes.data);
+  const randomQuestion = useAppSelector((state) => state.quiz.randomQuiz);
   const dispatch = useAppDispatch();
 
-  const currId = quizes[getRandomInt(quizes.length)]
-    ? quizes[getRandomInt(quizes.length)]._id
-    : undefined;
-
   useEffect(() => {
-    setQuestionId(currId);
-    console.log(quizes);
-  }, [dispatch, currId, location]);
+    dispatch(setRandomQuestion(getRandomInt(quizes.length)));
+    setQuestionId(randomQuestion ? randomQuestion._id : 0);
+  }, [location, dispatch, questionId]);
+
   return (
     <>
       <header className={`w-full fixed bg-white`}>

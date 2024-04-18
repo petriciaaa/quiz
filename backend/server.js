@@ -13,8 +13,8 @@ const app = express();
 const PORT = 3000;
 
 app.use(express.json());
-app.use("/api", questionRouter);
 app.use(cors());
+app.use("/api", questionRouter);
 
 async function startServer() {
   try {

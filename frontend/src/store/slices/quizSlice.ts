@@ -37,58 +37,48 @@ export const fetchQuizById = createAsyncThunk(
     }
   }
 );
-export const addQuiz = createAsyncThunk(
-  "quiz/addQuiz",
-  async function (question: IQuestion, { rejectWithValue, dispatch }) {
-    try {
-      const response = await fetch(`http://localhost:3000/api/questions`, {
-        method: "POST",
-        body: JSON.stringify(question),
-      });
 
-      if (!response.ok) {
-        throw new Error("Server Error!");
-      }
-      const data = await response.json();
-      dispatch(addQuestion(data));
-    } catch (error: any) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-const initialState: any = [];
+interface IInitialsState {
+  quizes: {
+    data: IQuestion[];
+    status: null | string | "loading" | "done";
+    error: null | string;
+  };
+  randomQuiz: undefined | IQuestion;
+}
+
+const initialState: IInitialsState = {
+  quizes: {
+    data: [],
+    status: "",
+    error: null,
+  },
+  randomQuiz: undefined,
+};
 
 const quizSlice = createSlice({
   name: "quizes",
   initialState,
   reducers: {
-    addQuestion(state, action) {
-      state.push(action.payload);
+    setRandomQuestion(state: typeof initialState, action) {
+      //In action - number
+      state.randomQuiz = state.quizes.data[action.payload];
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchQuizes.pending, (state: any) => {
-        return [...state, { isLoading: true, error: undefined }];
+      .addCase(fetchQuizes.pending, (state: typeof initialState) => {
+        state.quizes.status = "loading";
       })
-      .addCase(fetchQuizes.fulfilled, (state, action) => {
-        return action.payload;
+      .addCase(fetchQuizes.fulfilled, (state: typeof initialState, action) => {
+        state.quizes.data = action.payload;
+        state.quizes.status = "done";
       })
-      .addCase(fetchQuizes.rejected, (state, action) => {
-        return action.payload;
+      .addCase(fetchQuizes.rejected, (state: typeof initialState, action) => {
+        state.quizes.error = "failed";
       });
-    // .addCase(addQuiz.pending, (state: any) => {
-    //   // handle the pending stage
-    //   return [...state, { isLoading: true, error: undefined }];
-    // })
-    // .addCase(addQuiz.fulfilled, (state, action) => {
-    //   return undefined;
-    // })
-    // .addCase(addQuiz.rejected, (state, action) => {
-    //   return undefined;
-    // });
   },
 });
-const { addQuestion } = quizSlice.actions;
+export const { setRandomQuestion } = quizSlice.actions;
 
 export default quizSlice.reducer;
