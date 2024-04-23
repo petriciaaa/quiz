@@ -10,21 +10,32 @@ import { useAppSelector } from "hooks/redux/main";
 import { getRandomInt } from "utils/getRandomInt";
 import { useAppDispatch } from "./../../../hooks/redux/main";
 import { setRandomQuestion } from "store/slices/quizSlice";
+import { IQuestion } from "types/question";
 
 function Header() {
+  // const [menuOpen, setMenuOpen] = useState(false);
+  // const { width = 0, height = 0 } = useWindowSize();
+  // const dispatch = useAppDispatch();
+
+  // const [randomQuiz, setRandomQuiz] = useState(useAppSelector((state) => state.quiz.randomQuiz));
+  // const { status, error, data } = useAppSelector((state) => state.quiz.quizes);
+  // console.log(randomQuiz);
   const [menuOpen, setMenuOpen] = useState(false);
   const { width = 0, height = 0 } = useWindowSize();
-  const [questionId, setQuestionId] = useState<Number>();
-  const location = useLocation();
-
-  const quizes = useAppSelector((state) => state.quiz.quizes.data);
-  const randomQuestion = useAppSelector((state) => state.quiz.randomQuiz);
   const dispatch = useAppDispatch();
+  const location = useLocation();
+  const [randomQuiz, setRandomQuiz] = useState<IQuestion>();
+  const { status, error, data } = useAppSelector((state) => state.quiz.quizes);
 
   useEffect(() => {
-    dispatch(setRandomQuestion(getRandomInt(quizes.length)));
-    setQuestionId(randomQuestion ? randomQuestion._id : 0);
-  }, [location, dispatch, questionId]);
+    dispatch(setRandomQuestion(Math.floor(Math.random() * data.length)));
+  }, [location, dispatch, data]);
+
+  const handleRandomQuizClick = () => {
+    const newRandomQuizIndex = Math.floor(Math.random() * data.length);
+    dispatch(setRandomQuestion(newRandomQuizIndex));
+    setRandomQuiz(data[newRandomQuizIndex]);
+  };
 
   return (
     <>
@@ -51,8 +62,9 @@ function Header() {
               Add quiz
             </NavLink>
             <NavLink
-              to={`${questionId ? `/random/${questionId}` : "/notFound"}`}
+              to={`${randomQuiz ? `/random/${randomQuiz._id}` : "/notFound"}`}
               className={`header__nav__element`}
+              onClick={handleRandomQuizClick}
             >
               Random quiz
             </NavLink>

@@ -3,7 +3,7 @@ import RandomQuestion from "./../components/randomQuestion/RandomQuestion";
 
 function RandomQuize() {
   return (
-    <div>
+    <div className="w-full h-auto mt-40">
       <RandomQuestion />
     </div>
   );

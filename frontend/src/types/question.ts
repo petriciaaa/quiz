@@ -4,4 +4,5 @@ export interface IQuestion {
   answers: [];
   correct_answer: number | string;
   title: string;
+  category: string;
 }

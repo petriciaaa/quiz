@@ -5,9 +5,8 @@ class QuestionController {
   async create(req, res) {
     try {
       const question = QuestionService.create(req.body);
-      res.json(question);
-      res.status(200);
-      return res.json(question);
+      res.status(200).json(question);
+      // return res.json(question);
     } catch (error) {
       res.status(500).json(error);
     }
