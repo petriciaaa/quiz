@@ -21,18 +21,15 @@ function App() {
     dispatch(fetchQuizes());
   }, [dispatch]);
 
-  if (data && data.length) {
-    //Spec magick
-    dispatch(setRandomQuestion(Math.floor(Math.random() * data.length)));
-  }
-  console.log(useAppSelector((state) => state.quiz.quizes.data.length));
-
   if (status === "loading" || status === "") {
     return (
       <section className="w-full h-96 flex items-center justify-center">
         <ProgressLoader />
       </section>
     );
+  }
+  if (error) {
+    return <h1>error</h1>;
   }
   if (data) {
     return (

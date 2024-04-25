@@ -2,30 +2,36 @@ import { Alert, Button, Checkbox, FormGroup, FormHelperText } from "@mui/materia
 import ProgressLoader from "components/ui/progress/ProgressLoader";
 import { useAppDispatch, useAppSelector } from "hooks/redux/main";
 import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
-import { deleteQuizById } from "store/slices/quizSlice";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { deleteQuizById, setRandomQuestion, setRandomQuestionById } from "store/slices/quizSlice";
 import { IQuestion } from "types/question";
 import { findQuizById } from "utils/findQuizById";
 import { getRandomInt } from "utils/getRandomInt";
 
+/**Короче скрытые зависимости. По handleSubmitQuestion идет удаление, */
+
 function RandomQuestion() {
-  //Data
   const { id } = useParams();
+  const navigate = useNavigate();
+  const data = useAppSelector((state) => state.quiz.quizes.data);
   const dispatch = useAppDispatch();
 
-  const questions: IQuestion[] = useAppSelector((state) => state.quiz.quizes.data);
-  const [currentQuestion, setCurrentQuestion] = useState<any>(
-    useAppSelector((state) => state.quiz.randomQuiz)
-  );
+  const randomQuiz = useAppSelector((state) => state.quiz.randomQuiz);
+  const [currentQuestion, setCurrentQuestion] = useState(randomQuiz);
 
-  const generatedQuestion: IQuestion | null = findQuizById(questions, id);
+  useEffect(() => {
+    dispatch(setRandomQuestionById({ id }));
+    //setCurrentQuestion(findQuizById(data, id));
+  }, [id, dispatch, randomQuiz, data]);
 
-  if (generatedQuestion !== currentQuestion) {
-    setCurrentQuestion(generatedQuestion);
-  }
-
-  const [userAnswer, setUserAnswer] = useState<string | number | undefined>();
+  const [userAnswer, setUserAnswer] = useState<string | number | undefined>(undefined);
   const [correct, setCorrect] = useState<boolean | undefined>(undefined);
+
+  if (currentQuestion?._id !== id) {
+    //   setCurrentQuestion(findQuizById(data, id));
+    console.log(id === currentQuestion?._id);
+    console.log(randomQuiz);
+  }
 
   const handleSubmitQuestion = () => {
     if (userAnswer === undefined) {
@@ -37,10 +43,12 @@ function RandomQuestion() {
     }
     if (userAnswer === currentQuestion?.correct_answer) {
       setCorrect(true);
+      console.log("delete");
+
+      dispatch(deleteQuizById({ id }));
     }
   };
 
-  useEffect(() => {}, [questions]);
   if (!currentQuestion) {
     return (
       <section className="w-full h-auto  flex items-center justify-center flex-col">
@@ -67,10 +75,12 @@ function RandomQuestion() {
               ))
             : null}
         </FormGroup>
-        <FormHelperText>Be careful</FormHelperText>
-        <Button variant="contained" color="primary" onClick={handleSubmitQuestion}>
-          Send
-        </Button>
+        <FormHelperText>Be careful, only unlimited attempts!</FormHelperText>
+        {!correct && (
+          <Button variant="contained" color="primary" onClick={handleSubmitQuestion}>
+            Send
+          </Button>
+        )}
       </div>
       <div className="correct">
         {!correct && correct !== undefined && (
@@ -96,7 +106,10 @@ function RandomQuestion() {
               variant="contained"
               color="primary"
               onClick={() => {
-                dispatch(deleteQuizById({ id }));
+                setUserAnswer(undefined);
+                setCorrect(undefined);
+                dispatch(setRandomQuestion());
+                navigate(`/random/${randomQuiz?._id}`);
               }}
             >
               Next

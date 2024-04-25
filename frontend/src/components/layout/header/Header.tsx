@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useWindowSize } from "usehooks-ts";
 import MenuIcon from "@mui/icons-material/Menu";
 import LiveSearch from "components/search/LiveSearch";
 import Logo from "assets/images/logo.png";
-
 import "./header.scss";
 import { useAppSelector } from "hooks/redux/main";
 import { getRandomInt } from "utils/getRandomInt";
@@ -13,28 +12,25 @@ import { setRandomQuestion } from "store/slices/quizSlice";
 import { IQuestion } from "types/question";
 
 function Header() {
-  // const [menuOpen, setMenuOpen] = useState(false);
-  // const { width = 0, height = 0 } = useWindowSize();
-  // const dispatch = useAppDispatch();
-
-  // const [randomQuiz, setRandomQuiz] = useState(useAppSelector((state) => state.quiz.randomQuiz));
-  // const { status, error, data } = useAppSelector((state) => state.quiz.quizes);
-  // console.log(randomQuiz);
   const [menuOpen, setMenuOpen] = useState(false);
   const { width = 0, height = 0 } = useWindowSize();
+  const navigate = useNavigate();
+
   const dispatch = useAppDispatch();
-  const location = useLocation();
-  const [randomQuiz, setRandomQuiz] = useState<IQuestion>();
-  const { status, error, data } = useAppSelector((state) => state.quiz.quizes);
+
+  const randomQuiz = useAppSelector((state) => state.quiz.randomQuiz);
+  const [rndQuiz, setRndQuiz] = useState(randomQuiz);
 
   useEffect(() => {
-    dispatch(setRandomQuestion(Math.floor(Math.random() * data.length)));
-  }, [location, dispatch, data]);
+    setRndQuiz(randomQuiz);
+  }, [randomQuiz, dispatch]);
 
   const handleRandomQuizClick = () => {
-    const newRandomQuizIndex = Math.floor(Math.random() * data.length);
-    dispatch(setRandomQuestion(newRandomQuizIndex));
-    setRandomQuiz(data[newRandomQuizIndex]);
+    console.log("y");
+
+    dispatch(setRandomQuestion());
+    setRndQuiz(randomQuiz); // update rndQuiz state here
+    //navigate(`${rndQuiz ? `/random/${rndQuiz._id}` : "/notFound"}`)}
   };
 
   return (
@@ -62,7 +58,7 @@ function Header() {
               Add quiz
             </NavLink>
             <NavLink
-              to={`${randomQuiz ? `/random/${randomQuiz._id}` : "/notFound"}`}
+              to={`${rndQuiz ? `/random/${rndQuiz._id}` : "/notFound"}`}
               className={`header__nav__element`}
               onClick={handleRandomQuizClick}
             >

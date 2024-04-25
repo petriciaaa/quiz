@@ -12,6 +12,7 @@ export const fetchQuizes = createAsyncThunk(
       }
 
       const data = await response.json();
+
       return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
@@ -54,7 +55,7 @@ interface IInitialsState {
 const initialState: IInitialsState = {
   quizes: {
     data: [],
-    status: "",
+    status: "idle",
     error: null,
   },
   randomQuiz: undefined,
@@ -69,8 +70,11 @@ const quizSlice = createSlice({
   name: "quizes",
   initialState,
   reducers: {
-    setRandomQuestion(state: typeof initialState, action = { payload: 0, type: "quizes" }) {
-      state.randomQuiz = state.quizes.data[action.payload];
+    setRandomQuestion(state: typeof initialState) {
+      state.randomQuiz = state.quizes.data[Math.floor(Math.random() * state.quizes.data.length)];
+    },
+    setRandomQuestionById(state: typeof initialState, action) {
+      state.randomQuiz = state.quizes.data.filter((quiz) => quiz._id === action.payload.id)[0];
     },
     setQuizes(state: typeof initialState, action) {
       state.quizes.data = action.payload;
@@ -80,8 +84,9 @@ const quizSlice = createSlice({
       state.categoryList.all = state.quizes;
     },
     deleteQuizById(state: typeof initialState, action) {
-      state.quizes.data = state.quizes.data.filter((el) => el._id !== action.payload.id);
-      state.randomQuiz = state.quizes.data[Math.floor(Math.random() * state.quizes.data.length)];
+      state.quizes.data = state.quizes.data.filter((quiz) => quiz._id !== action.payload.id);
+      console.log(state.quizes.data);
+      // console.log(action.payload.id);
     },
   },
   extraReducers: (builder) => {
@@ -91,6 +96,7 @@ const quizSlice = createSlice({
       })
       .addCase(fetchQuizes.fulfilled, (state: typeof initialState, action) => {
         state.quizes.data = action.payload;
+        state.randomQuiz = state.quizes.data[Math.floor(Math.random() * state.quizes.data.length)];
         state.quizes.status = "success";
       })
       .addCase(fetchQuizes.rejected, (state: typeof initialState, action) => {
@@ -98,6 +104,6 @@ const quizSlice = createSlice({
       });
   },
 });
-export const { setRandomQuestion, deleteQuizById } = quizSlice.actions;
+export const { setRandomQuestion, deleteQuizById, setRandomQuestionById } = quizSlice.actions;
 
 export default quizSlice.reducer;
