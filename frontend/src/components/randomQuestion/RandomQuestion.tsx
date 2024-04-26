@@ -13,25 +13,21 @@ import { getRandomInt } from "utils/getRandomInt";
 function RandomQuestion() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const data = useAppSelector((state) => state.quiz.quizes.data);
+
   const dispatch = useAppDispatch();
 
-  const randomQuiz = useAppSelector((state) => state.quiz.randomQuiz);
-  const [currentQuestion, setCurrentQuestion] = useState(randomQuiz);
+  const { data } = useAppSelector<IQuestion | any>((state) => state.quiz.quizes);
+  const rndQuestion = findQuizById(data, id);
+
+  const [currentQuestion, setCurrentQuestion] = useState(rndQuestion);
 
   useEffect(() => {
-    dispatch(setRandomQuestionById({ id }));
-    //setCurrentQuestion(findQuizById(data, id));
-  }, [id, dispatch, randomQuiz, data]);
+    setCurrentQuestion(rndQuestion);
+    return () => {};
+  }, [dispatch, rndQuestion, id]);
 
   const [userAnswer, setUserAnswer] = useState<string | number | undefined>(undefined);
   const [correct, setCorrect] = useState<boolean | undefined>(undefined);
-
-  if (currentQuestion?._id !== id) {
-    //   setCurrentQuestion(findQuizById(data, id));
-    console.log(id === currentQuestion?._id);
-    console.log(randomQuiz);
-  }
 
   const handleSubmitQuestion = () => {
     if (userAnswer === undefined) {
@@ -41,12 +37,10 @@ function RandomQuestion() {
       setCorrect(false);
       return;
     }
-    if (userAnswer === currentQuestion?.correct_answer) {
-      setCorrect(true);
-      console.log("delete");
+    // userAnswer === currentQuestion?.correct_answer
+    setCorrect(true);
 
-      dispatch(deleteQuizById({ id }));
-    }
+    // dispatch(deleteQuizById({ id }));
   };
 
   if (!currentQuestion) {
@@ -108,8 +102,9 @@ function RandomQuestion() {
               onClick={() => {
                 setUserAnswer(undefined);
                 setCorrect(undefined);
+                dispatch(deleteQuizById({ id }));
                 dispatch(setRandomQuestion());
-                navigate(`/random/${randomQuiz?._id}`);
+                // navigate(`/random/${randomQuiz?._id}`);
               }}
             >
               Next

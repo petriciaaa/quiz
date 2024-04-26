@@ -85,7 +85,7 @@ const quizSlice = createSlice({
     },
     deleteQuizById(state: typeof initialState, action) {
       state.quizes.data = state.quizes.data.filter((quiz) => quiz._id !== action.payload.id);
-      console.log(state.quizes.data);
+
       // console.log(action.payload.id);
     },
   },
