@@ -16,23 +16,45 @@ function Header() {
   const { width = 0, height = 0 } = useWindowSize();
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const dispatch = useAppDispatch();
 
   const randomQuiz = useAppSelector((state) => state.quiz.randomQuiz);
+  const { data } = useAppSelector((state) => state.quiz.quizes);
 
-  const [newRandomQuiz, setNewRandomQuiz] = useState<any>(null);
+  const [shouldNavigate, setShouldNavigate] = useState(false);
+
+  if (location.pathname.includes("/notfound")) {
+    try {
+      navigate(`/random/${randomQuiz?._id}`);
+      // setShouldNavigate(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const handleRandomQuizClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-
+    setShouldNavigate(true);
     dispatch(setRandomQuestion());
   };
 
   useEffect(() => {
-    if (randomQuiz) {
+    if (shouldNavigate && randomQuiz && data.length) {
       navigate(`/random/${randomQuiz._id}`);
+      setShouldNavigate(false);
     }
-  }, [randomQuiz, navigate]);
+    if (randomQuiz === undefined) {
+      navigate("notfound");
+      setShouldNavigate(false);
+    }
+  }, [randomQuiz, navigate, shouldNavigate, data]);
+
+  // useEffect(() => {
+  //   setRndQuiz(randomQuiz);
+  //   return () => {};
+  // }, [data, randomQuiz]);
 
   return (
     <>
@@ -58,14 +80,16 @@ function Header() {
             <NavLink to={"/addQuestion"} className={`header__nav__element`}>
               Add quiz
             </NavLink>
-            <NavLink
-              // to={`${randomQuiz ? `/random/${randomQuiz._id}` : "/notFound"}`}
-              to={"#"}
-              className={`header__nav__element`}
-              onClick={handleRandomQuizClick}
-            >
-              Random quiz
-            </NavLink>
+            {data && data.length && (
+              <NavLink
+                to={`${randomQuiz !== undefined ? `/random/${randomQuiz?._id}` : "/notfound"}`}
+                // to={`/random/${rndQuiz?._id}`}
+                className={`header__nav__element`}
+                onClick={handleRandomQuizClick}
+              >
+                Random quiz
+              </NavLink>
+            )}
           </nav>
 
           <div className="header__search mr-10">
