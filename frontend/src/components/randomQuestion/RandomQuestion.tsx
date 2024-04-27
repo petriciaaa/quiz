@@ -1,12 +1,8 @@
-import QuizItem from "components/questions/quizItem/QuizItem";
+import RndQuizItem from "components/randomQuestion/RndQuizItem";
 import ProgressLoader from "components/ui/progress/ProgressLoader";
 import { useAppDispatch, useAppSelector } from "hooks/redux/main";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-
-import { IQuestion } from "types/question";
-import { findQuizById } from "utils/findQuizById";
-import { getRandomInt } from "utils/getRandomInt";
 
 /**Короче скрытые зависимости. По handleSubmitQuestion идет удаление, */
 
@@ -17,11 +13,8 @@ function RandomQuestion() {
 
   const dispatch = useAppDispatch();
 
-  const [newID, setNeID] = useState<number | string | undefined>(id);
-
   const currentQuestion = useAppSelector((state) => state.quiz.randomQuiz);
   const { data } = useAppSelector((state) => state.quiz.quizes);
-  // console.log(id, location.pathname.includes("/notfound"));
 
   if (id !== currentQuestion?._id && data.length) {
     navigate(`/random/${currentQuestion?._id}`);
@@ -41,14 +34,7 @@ function RandomQuestion() {
       </section>
     );
   }
-  return (
-    <QuizItem
-      currentQuestion={currentQuestion}
-      // handleNextQuestion={() => {
-
-      // }}
-    />
-  );
+  return <RndQuizItem currentQuestion={currentQuestion} />;
 }
 
 export default RandomQuestion;

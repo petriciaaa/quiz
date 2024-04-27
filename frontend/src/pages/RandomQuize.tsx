@@ -1,5 +1,5 @@
 import React from "react";
-import RandomQuestion from "./../components/randomQuestion/RandomQuestion";
+import RandomQuestion from "components/randomQuestion/RandomQuestion";
 
 function RandomQuize() {
   return (
