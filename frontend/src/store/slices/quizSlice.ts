@@ -96,9 +96,6 @@ const quizSlice = createSlice({
       })
       .addCase(fetchQuizes.fulfilled, (state: typeof initialState, action) => {
         state.quizes.data = action.payload;
-        state.quizes.data.pop();
-        state.quizes.data.pop();
-        state.quizes.data.pop();
         state.randomQuiz = state.quizes.data[Math.floor(Math.random() * state.quizes.data.length)];
         state.quizes.status = "success";
       })
