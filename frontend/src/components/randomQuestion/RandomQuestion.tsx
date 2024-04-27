@@ -17,22 +17,22 @@ function RandomQuestion() {
 
   const dispatch = useAppDispatch();
 
+  const [newID, setNeID] = useState<number | string | undefined>(id);
+
+  const currentQuestion = useAppSelector((state) => state.quiz.randomQuiz);
   const { data } = useAppSelector((state) => state.quiz.quizes);
-  const rndQuestion = findQuizById(data, id);
+  // console.log(id, location.pathname.includes("/notfound"));
 
-  const [currentQuestion, setCurrentQuestion] = useState<any>(rndQuestion);
-
-  // useEffect(() => {
-  //   const rndQuestion = findQuizById(data, id);
-  // console.log(useAppSelector((state) => state.quiz.randomQuiz?._id) == id);
-
-  useEffect(() => {
-    if (rndQuestion) {
-      setCurrentQuestion(rndQuestion);
-    } else {
-      // setCurrentQuestion(rndQuestion);
+  if (id !== currentQuestion?._id && data.length) {
+    navigate(`/random/${currentQuestion?._id}`);
+  }
+  if (location.pathname.includes("/notfound")) {
+    try {
+      navigate(`/random/${id}`);
+    } catch (error) {
+      console.log(error);
     }
-  }, [dispatch, rndQuestion, id, data]);
+  }
 
   if (!currentQuestion) {
     return (
@@ -44,11 +44,9 @@ function RandomQuestion() {
   return (
     <QuizItem
       currentQuestion={currentQuestion}
-      handler={() => {
-        // const rndQuestion = findQuizById(data, location.pathname.split('/')[2]);
-        // setCurrentQuestion(rndQuestion);
-        // navigate(`/random/${rndQuestion._id}`);
-      }}
+      // handleNextQuestion={() => {
+
+      // }}
     />
   );
 }

@@ -11,13 +11,19 @@ import { getRandomInt } from "utils/getRandomInt";
 
 function QuizItem({
   currentQuestion,
-  handler,
-}: {
+}: // handleRetry,
+// handleNextQuestion,
+// handleSend,
+{
   currentQuestion: IQuestion;
-  handler: () => void;
+  // handleRetry: () => void;
+  // handleNextQuestion: () => void;
+  // handleSend: () => void;
 }) {
   const id = currentQuestion._id;
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { data } = useAppSelector((s) => s.quiz.quizes);
   const [userAnswer, setUserAnswer] = useState<string | number | undefined>(undefined);
   const [correct, setCorrect] = useState<boolean | undefined>(undefined);
 
@@ -76,6 +82,7 @@ function QuizItem({
               onClick={() => {
                 setUserAnswer(undefined);
                 setCorrect(undefined);
+                // handleRetry();
               }}
             >
               Retry
@@ -86,22 +93,26 @@ function QuizItem({
         {correct && (
           <div className="flex items-center justigy-center">
             <Alert severity="success">Grats.</Alert>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => {
-                console.log("delete ii next");
-
-                setUserAnswer(undefined);
-                setCorrect(undefined);
-                dispatch(deleteQuizById({ id }));
-                dispatch(setRandomQuestion());
-                handler();
-                // navigate(`/random/${randomQuiz?._id}`);
-              }}
-            >
-              Next
-            </Button>
+            {data.length >= 2 && (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  if (!data || !data.length) {
+                    navigate("/");
+                    return;
+                  }
+                  setUserAnswer(undefined);
+                  setCorrect(undefined);
+                  dispatch(deleteQuizById({ id }));
+                  dispatch(setRandomQuestion());
+                  // handleNextQuestion?handleNextQuestion(): ;
+                  // navigate(`/random/${randomQuiz?._id}`);
+                }}
+              >
+                Next
+              </Button>
+            )}
           </div>
         )}
       </div>
