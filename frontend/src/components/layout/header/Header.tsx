@@ -16,23 +16,25 @@ function Header() {
   const { width = 0, height = 0 } = useWindowSize();
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const dispatch = useAppDispatch();
 
   const randomQuiz = useAppSelector((state) => state.quiz.randomQuiz);
 
-  const [newRandomQuiz, setNewRandomQuiz] = useState<any>(null);
+  const [shouldNavigate, setShouldNavigate] = useState(false);
   const handleRandomQuizClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-
+    setShouldNavigate(true);
     dispatch(setRandomQuestion());
   };
 
   useEffect(() => {
-    if (randomQuiz) {
+    if (shouldNavigate && randomQuiz) {
       navigate(`/random/${randomQuiz._id}`);
+      setShouldNavigate(false); // reset the flag
     }
-  }, [randomQuiz, navigate]);
+  }, [randomQuiz, navigate, shouldNavigate]);
 
   return (
     <>
@@ -60,7 +62,7 @@ function Header() {
             </NavLink>
             <NavLink
               // to={`${randomQuiz ? `/random/${randomQuiz._id}` : "/notFound"}`}
-              to={"#"}
+              to={`/random/${randomQuiz?._id}`}
               className={`header__nav__element`}
               onClick={handleRandomQuizClick}
             >
