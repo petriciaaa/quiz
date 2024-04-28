@@ -1,15 +1,13 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useWindowSize } from "usehooks-ts";
 import MenuIcon from "@mui/icons-material/Menu";
 import LiveSearch from "components/search/LiveSearch";
 import Logo from "assets/images/logo.png";
 import "./header.scss";
 import { useAppSelector } from "hooks/redux/main";
-import { getRandomInt } from "utils/getRandomInt";
 import { useAppDispatch } from "./../../../hooks/redux/main";
 import { setRandomQuestion } from "store/slices/quizSlice";
-import { IQuestion } from "types/question";
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -45,7 +43,7 @@ function Header() {
       navigate(`/random/${randomQuiz._id}`);
       setShouldNavigate(false);
     }
-    if (randomQuiz === undefined) {
+    if (randomQuiz === undefined && shouldNavigate) {
       navigate("notfound");
       setShouldNavigate(false);
     }
@@ -57,7 +55,7 @@ function Header() {
 
   return (
     <>
-      <header className={`w-full fixed bg-white`}>
+      <header className={`w-full fixed bg-white z-10`}>
         <div
           className={`header-wrapper  ${
             width <= 550 ? "hidden" : "block"
@@ -73,7 +71,7 @@ function Header() {
             <NavLink to={"/"} className={`header__nav__element`}>
               Home
             </NavLink>
-            <NavLink to={"#"} className={`header__nav__element`}>
+            <NavLink to={"/quiz"} className={`header__nav__element`}>
               Quiz
             </NavLink>
             <NavLink to={"/addQuestion"} className={`header__nav__element`}>
@@ -82,7 +80,6 @@ function Header() {
             {data && data.length && (
               <NavLink
                 to={`${randomQuiz !== undefined ? `/random/${randomQuiz?._id}` : "/notfound"}`}
-                // to={`/random/${rndQuiz?._id}`}
                 className={`header__nav__element`}
                 onClick={handleRandomQuizClick}
               >

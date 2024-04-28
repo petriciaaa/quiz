@@ -47,9 +47,7 @@ interface IInitialsState {
   randomQuiz: undefined | IQuestion;
   quizStreak: number;
   categoryList: {
-    all: {};
-    nature: {};
-    cosmic: {};
+    [key: string]: IQuestion[];
   };
 }
 
@@ -61,11 +59,7 @@ const initialState: IInitialsState = {
   },
   randomQuiz: undefined,
   quizStreak: 0,
-  categoryList: {
-    all: {},
-    nature: {},
-    cosmic: {},
-  },
+  categoryList: {},
 };
 
 const quizSlice = createSlice({
@@ -82,8 +76,24 @@ const quizSlice = createSlice({
       state.quizes.data = action.payload;
       state.quizes.status = "success";
     },
-    setCategoryList(state: typeof initialState, action) {
-      state.categoryList.all = state.quizes;
+    setCategoryList(state: typeof initialState) {
+      if (state.categoryList !== null) {
+        if (!(Object.keys(state.categoryList).length === 0)) {
+          return;
+        }
+      }
+
+      state.categoryList = {};
+
+      for (let index = 0; index < state.quizes.data.length; index++) {
+        const element = state.quizes.data[index];
+
+        if (state.categoryList[element.category]) {
+          state.categoryList[element.category].push(element);
+        } else {
+          state.categoryList[element.category] = [element];
+        }
+      }
     },
     streakQuizIncrement(state: typeof initialState) {
       if (state.quizes.data.length > 1) {
@@ -118,6 +128,7 @@ export const {
   setRandomQuestionById,
   streakQuizIncrement,
   streakQuizRefresh,
+  setCategoryList,
 } = quizSlice.actions;
 
 export default quizSlice.reducer;

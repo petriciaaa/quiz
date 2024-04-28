@@ -1,7 +1,7 @@
 import RndQuizItem from "components/randomQuestion/RndQuizItem";
 import ProgressLoader from "components/ui/progress/ProgressLoader";
-import { useAppDispatch, useAppSelector } from "hooks/redux/main";
-import React, { useEffect, useMemo, useState } from "react";
+import { useAppSelector } from "hooks/redux/main";
+import React, { useMemo } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Streak from "./Streak";
 
@@ -11,8 +11,6 @@ function RandomQuestion() {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-
-  const dispatch = useAppDispatch();
 
   const currentQuestion = useAppSelector((state) => state.quiz.randomQuiz);
   const streak = useAppSelector((state) => state.quiz.quizStreak);

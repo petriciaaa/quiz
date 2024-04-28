@@ -3,12 +3,7 @@
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "baseUrl": "src",
-    "paths": {
-      "@src/*": ["*"],
-      "@pages/*": ["pages/*"],
-      "@components": ["components"],
-      "@components/*": ["components/*"]
-    },
+
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,

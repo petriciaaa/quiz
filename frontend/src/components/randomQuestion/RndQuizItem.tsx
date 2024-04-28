@@ -1,31 +1,20 @@
 import React from "react";
 import { Alert, AlertTitle, Button, Checkbox, FormGroup, FormHelperText } from "@mui/material";
-import ProgressLoader from "components/ui/progress/ProgressLoader";
+
 import { useAppDispatch, useAppSelector } from "hooks/redux/main";
-import { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   deleteQuizById,
   setRandomQuestion,
-  setRandomQuestionById,
   streakQuizIncrement,
   streakQuizRefresh,
 } from "store/slices/quizSlice";
 import { IQuestion } from "types/question";
-import { findQuizById } from "utils/findQuizById";
+
 import { getRandomInt } from "utils/getRandomInt";
 
-function QuizItem({
-  currentQuestion,
-}: // handleRetry,
-// handleNextQuestion,
-// handleSend,
-{
-  currentQuestion: IQuestion;
-  // handleRetry: () => void;
-  // handleNextQuestion: () => void;
-  // handleSend: () => void;
-}) {
+function QuizItem({ currentQuestion }: { currentQuestion: IQuestion }) {
   const id = currentQuestion._id;
   const dispatch = useAppDispatch();
   const navigate = useNavigate();

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 
 import { Route, Routes } from "react-router";
 
@@ -7,7 +7,7 @@ import Layout from "./layout/Layout";
 import Quiz from "pages/Quiz";
 import RandomQuize from "pages/RandomQuize";
 import NotFound from "pages/NotFound";
-import { fetchQuizes, setRandomQuestion } from "store/slices/quizSlice";
+import { fetchQuizes } from "store/slices/quizSlice";
 import { useAppDispatch } from "hooks/redux/main";
 import { useAppSelector } from "hooks/redux/main";
 import AddQuiz from "pages/AddQuiz";

@@ -5,4 +5,5 @@ export interface IQuestion {
   correct_answer: number | string;
   title: string;
   category: string;
+  status?: "idle" | "done";
 }
