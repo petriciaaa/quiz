@@ -4,7 +4,13 @@ import ProgressLoader from "components/ui/progress/ProgressLoader";
 import { useAppDispatch, useAppSelector } from "hooks/redux/main";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { deleteQuizById, setRandomQuestion, setRandomQuestionById } from "store/slices/quizSlice";
+import {
+  deleteQuizById,
+  setRandomQuestion,
+  setRandomQuestionById,
+  streakQuizIncrement,
+  streakQuizRefresh,
+} from "store/slices/quizSlice";
 import { IQuestion } from "types/question";
 import { findQuizById } from "utils/findQuizById";
 import { getRandomInt } from "utils/getRandomInt";
@@ -29,14 +35,17 @@ function QuizItem({
   const [correct, setCorrect] = useState<boolean | undefined>(undefined);
 
   const handleSubmitQuestion = () => {
+    setUserAnswer(undefined);
     if (userAnswer === undefined) {
       return;
     }
     if (!userAnswer || userAnswer !== currentQuestion?.correct_answer) {
       setCorrect(false);
+      dispatch(streakQuizRefresh());
       return;
     }
     // setUserAnswer(null);
+    dispatch(streakQuizIncrement());
     setCorrect(true);
   };
 
@@ -45,7 +54,9 @@ function QuizItem({
       <div className="flex items-start justify-center flex-col  p-1">
         <div className="question-wrapper">
           <title className="flex items-start justify-center flex-col">
-            <span className="text-m">{currentQuestion.category}</span>
+            <span className="text-m">
+              {currentQuestion.category ? currentQuestion.category : "General"}
+            </span>
             <span className="text-2xl">
               {currentQuestion.title.endsWith("?")
                 ? currentQuestion.title

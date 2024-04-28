@@ -52,9 +52,8 @@ function Header() {
   }, [randomQuiz, navigate, shouldNavigate, data]);
 
   // useEffect(() => {
-  //   setRndQuiz(randomQuiz);
-  //   return () => {};
-  // }, [data, randomQuiz]);
+  //   setShouldNavigate(false);
+  // }, []);
 
   return (
     <>

@@ -45,6 +45,7 @@ interface IInitialsState {
     error: null | string;
   };
   randomQuiz: undefined | IQuestion;
+  quizStreak: number;
   categoryList: {
     all: {};
     nature: {};
@@ -59,6 +60,7 @@ const initialState: IInitialsState = {
     error: null,
   },
   randomQuiz: undefined,
+  quizStreak: 0,
   categoryList: {
     all: {},
     nature: {},
@@ -83,10 +85,16 @@ const quizSlice = createSlice({
     setCategoryList(state: typeof initialState, action) {
       state.categoryList.all = state.quizes;
     },
+    streakQuizIncrement(state: typeof initialState) {
+      if (state.quizes.data.length > 1) {
+        state.quizStreak++;
+      }
+    },
+    streakQuizRefresh(state: typeof initialState) {
+      state.quizStreak = 0;
+    },
     deleteQuizById(state: typeof initialState, action) {
       state.quizes.data = state.quizes.data.filter((quiz) => quiz._id !== action.payload.id);
-
-      // console.log(action.payload.id);
     },
   },
   extraReducers: (builder) => {
@@ -104,6 +112,12 @@ const quizSlice = createSlice({
       });
   },
 });
-export const { setRandomQuestion, deleteQuizById, setRandomQuestionById } = quizSlice.actions;
+export const {
+  setRandomQuestion,
+  deleteQuizById,
+  setRandomQuestionById,
+  streakQuizIncrement,
+  streakQuizRefresh,
+} = quizSlice.actions;
 
 export default quizSlice.reducer;
