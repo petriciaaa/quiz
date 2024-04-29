@@ -5,13 +5,14 @@ import { Route, Routes } from "react-router";
 import Home from "pages/Home";
 import Layout from "./layout/Layout";
 import Quiz from "pages/Quiz";
-import RandomQuize from "pages/RandomQuize";
+import RandomQuiz from "pages/RandomQuize";
 import NotFound from "pages/NotFound";
 import { fetchQuizes } from "store/slices/quizSlice";
 import { useAppDispatch } from "hooks/redux/main";
 import { useAppSelector } from "hooks/redux/main";
 import AddQuiz from "pages/AddQuiz";
 import ProgressLoader from "./ui/progress/ProgressLoader";
+import CategoryQuiz from "pages/CategoryQuiz";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -39,8 +40,9 @@ function App() {
             <Route index path="/" element={<Home />} />
             <Route path="" element={null} />
             <Route path="/quiz" element={<Quiz />} />
+            <Route path="/quiz/:category" element={<CategoryQuiz />} />
             <Route path="/addQuestion" element={<AddQuiz />} />
-            <Route path="/random/:id" element={<RandomQuize />} />
+            <Route path="/random/:id" element={<RandomQuiz />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

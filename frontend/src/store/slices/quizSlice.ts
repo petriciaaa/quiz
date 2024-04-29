@@ -41,6 +41,7 @@ export const fetchQuizById = createAsyncThunk(
 interface IInitialsState {
   quizes: {
     data: IQuestion[];
+    initialData: IQuestion[];
     status: null | string | "loading" | "done";
     error: null | string;
   };
@@ -54,6 +55,7 @@ interface IInitialsState {
 const initialState: IInitialsState = {
   quizes: {
     data: [],
+    initialData: [],
     status: "idle",
     error: null,
   },
@@ -77,23 +79,21 @@ const quizSlice = createSlice({
       state.quizes.status = "success";
     },
     setCategoryList(state: typeof initialState) {
-      if (state.categoryList !== null) {
-        if (!(Object.keys(state.categoryList).length === 0)) {
-          return;
-        }
-      }
-
       state.categoryList = {};
 
-      for (let index = 0; index < state.quizes.data.length; index++) {
-        const element = state.quizes.data[index];
-
+      for (let index = 0; index < state.quizes.initialData.length; index++) {
+        const element: IQuestion = state.quizes.initialData[index];
+        if (!element.category) {
+          element.category = "other";
+        }
         if (state.categoryList[element.category]) {
           state.categoryList[element.category].push(element);
         } else {
           state.categoryList[element.category] = [element];
         }
       }
+
+      state.categoryList["all"] = [...state.quizes.initialData];
     },
     streakQuizIncrement(state: typeof initialState) {
       if (state.quizes.data.length > 1) {
@@ -114,6 +114,7 @@ const quizSlice = createSlice({
       })
       .addCase(fetchQuizes.fulfilled, (state: typeof initialState, action) => {
         state.quizes.data = action.payload;
+        state.quizes.initialData = action.payload;
         state.randomQuiz = state.quizes.data[Math.floor(Math.random() * state.quizes.data.length)];
         state.quizes.status = "success";
       })

@@ -1,7 +1,9 @@
 import { useAppDispatch, useAppSelector } from "hooks/redux/main";
 import React, { useEffect, useState } from "react";
 import { setCategoryList } from "store/slices/quizSlice";
-import CategoryQuiz from "components/questions/categoryList/CategoryQuiz";
+import ListItemMemo from "./items/ListItem";
+import { NavLink } from "react-router-dom";
+import { Button } from "@mui/material";
 
 function CategoryList() {
   //
@@ -19,12 +21,21 @@ function CategoryList() {
   }, [dispatch]);
 
   return (
-    <div>
+    <div className="">
+      Category list
       {category.map((category, index) => {
         return (
           <>
-            <h1 className="bg-red-300">{category}</h1>d
-            <CategoryQuiz category={category} quizes={list[category]} />
+            <section className="my-2  flex flex-start justify-start">
+              <ListItemMemo category={category} quizes={list[category]} />
+
+              <NavLink to={`/quiz/${category}`} className={`ml-2`}>
+                {" "}
+                <Button variant={index % 2 === 0 ? "contained" : "outlined"} size="medium">
+                  Go quiz to {category}
+                </Button>
+              </NavLink>
+            </section>
           </>
         );
       })}

@@ -1,8 +1,8 @@
-import CategoryList from "components/questions/categoryList/CategoryList";
 import React from "react";
+import CategoryListMemo from "components/questions/categoryList/CategoryList";
 
 function Quiz() {
-  return <CategoryList />;
+  return <CategoryListMemo />;
 }
 
 export default Quiz;
