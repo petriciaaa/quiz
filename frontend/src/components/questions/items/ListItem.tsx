@@ -23,7 +23,9 @@ function ListItem({ quizes, category }: ICategoryQuizProps) {
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           {" "}
-          <Typography sx={{ width: "33%", flexShrink: 0 }}>{category}</Typography>
+          <Typography sx={{ width: "80%", flexShrink: 0 }}>
+            Preview {category} questions{" "}
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
           {quizes.map((quiz, index) => {

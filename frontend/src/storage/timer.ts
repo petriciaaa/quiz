@@ -11,7 +11,10 @@ class Timer {
     localStorage.setItem("timeLeft", this.timeLeft);
   }
   getLocalStorageTimeLeft() {
-    localStorage.getItem("timeLeft");
+    if (!localStorage.getItem("timeLeft")) {
+      return 0;
+    }
+    return localStorage.getItem("timeLeft");
   }
 }
 

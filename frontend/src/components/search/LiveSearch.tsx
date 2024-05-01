@@ -4,26 +4,11 @@ import { Input } from "@mui/material";
 import useOutsideClick from "hooks/useOutsideClick";
 import "./liveSearch.scss";
 import { NavLink } from "react-router-dom";
+import { useAppSelector } from "hooks/redux/main";
 
 function LiveSearch() {
-  const items = [
-    "Item 1",
-    "Item 2",
-    "Item 3",
-    "Item 4",
-    "Item 2",
-    "Item 3",
-    "Item 4",
-    "Item 2",
-    "Item 3",
-    "Item 4",
-    "Item 2",
-    "Item 3",
-    "Item 4",
-    "Item 2",
-    "Item 3",
-    "Item 4",
-  ];
+  const data = useAppSelector((state) => state.quiz.categoryList);
+  const items = [...useAppSelector((state) => state.quiz.quizes.data)];
   const [filteredItems, setFilteredItems] = useState(items);
   const [inputValue, setInputValue] = useState("");
   const [inputUsing, setInputUsing] = useState(false);
@@ -38,7 +23,7 @@ function LiveSearch() {
       return;
     }
     const filteredItems = items.filter((item) =>
-      item.toLocaleLowerCase().includes(inputValue.toLocaleLowerCase())
+      item.title.toLocaleLowerCase().includes(inputValue.toLocaleLowerCase())
     );
     setFilteredItems(filteredItems);
   };
@@ -68,8 +53,12 @@ function LiveSearch() {
         <ul className="search__result shadow-xl rounded-md">
           {filteredItems.map((el, index) => {
             return (
-              <NavLink to={`/`} key={index} className={`search__result__element`}>
-                {el}
+              <NavLink
+                to={`/quiz/${el.category ? el.category : "all"}`}
+                key={index}
+                className={`search__result__element`}
+              >
+                {el.title}
               </NavLink>
             );
           })}

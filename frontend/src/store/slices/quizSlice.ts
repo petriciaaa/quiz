@@ -51,7 +51,6 @@ interface IInitialsState {
     [key: string]: IQuestion[];
   };
 }
-
 const initialState: IInitialsState = {
   quizes: {
     data: [],
@@ -80,7 +79,9 @@ const quizSlice = createSlice({
     },
     setCategoryList(state: typeof initialState) {
       state.categoryList = {};
-
+      // if (!(Object.keys(state.categoryList).length === 0)) {
+      //   return;
+      // }
       for (let index = 0; index < state.quizes.initialData.length; index++) {
         const element: IQuestion = state.quizes.initialData[index];
         if (!element.category) {
@@ -95,6 +96,7 @@ const quizSlice = createSlice({
 
       state.categoryList["all"] = [...state.quizes.initialData];
     },
+
     streakQuizIncrement(state: typeof initialState) {
       if (state.quizes.data.length > 1) {
         state.quizStreak++;
@@ -119,6 +121,7 @@ const quizSlice = createSlice({
         state.quizes.status = "success";
       })
       .addCase(fetchQuizes.rejected, (state: typeof initialState, action) => {
+        state.quizes.status = "error";
         state.quizes.error = "failed";
       });
   },
