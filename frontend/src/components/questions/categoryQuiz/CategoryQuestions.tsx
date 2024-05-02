@@ -6,6 +6,7 @@ import { setCategoryList } from "store/slices/quizSlice";
 import Timer from "storage/timer";
 import { useNavigate } from "react-router";
 import { setUserProgress } from "store/slices/userSlices/userProgressSlice";
+import { Button } from "@mui/material";
 
 interface ICategoryQuestionsProps {
   category: string | undefined;
@@ -26,10 +27,9 @@ function CategoryQuestions({ category }: ICategoryQuestionsProps) {
 
   const time = useMemo(() => new Date(), []);
 
-  const [quizTime, setQuizTime] = useState(time.setSeconds(time.getSeconds() + 230));
+  const [quizTime, setQuizTime] = useState(time);
 
   useEffect(() => {
-    console.log(categoryQuestions);
     if (!userProgress || !categoryQuestions) {
       try {
         dispatch(setCategoryList());
@@ -44,15 +44,21 @@ function CategoryQuestions({ category }: ICategoryQuestionsProps) {
             },
           })
         );
-        if (categoryQuestions) {
-          setQuizTime(time.setSeconds(time.getSeconds() + 210));
-        }
         setError(false);
       } catch (error: unknown) {
         setError(true);
       }
     }
   }, [userProgress, categoryQuestions, dispatch, category, time]);
+
+  useEffect(() => {
+    if (!categoryQuestions?.length) {
+      return;
+    }
+    console.log(categoryQuestions?.length);
+    time.setSeconds(time.getSeconds() + 210 * categoryQuestions.length);
+    setQuizTime(time);
+  }, [categoryQuestions, time]);
 
   const expireTime = () => {
     navigate(`/result/${category}`);
@@ -62,7 +68,7 @@ function CategoryQuestions({ category }: ICategoryQuestionsProps) {
     return <span>An error ocurred</span>;
   }
   return (
-    <section className=" w-auto">
+    <section className=" w-auto flex flex-col">
       <MyTimer expiryTimestamp={quizTime} expireTime={expireTime} />
       <section className="w-full flex items-center justify-center flex-col p-2">
         {categoryQuestions?.map((quiz) => {
@@ -73,6 +79,14 @@ function CategoryQuestions({ category }: ICategoryQuestionsProps) {
           );
         })}
       </section>
+      <Button
+        variant="contained"
+        onClick={() => {
+          navigate(`/result/${category}`);
+        }}
+      >
+        end
+      </Button>
     </section>
   );
 }
